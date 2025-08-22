@@ -1,89 +1,100 @@
-# GPU-Accelerated Chirplet Transform
-Hardware-accelerated implementation of the Adaptive Chirplet Transform (ACT) for signal processing tasks. Designed for fast and efficient feature extraction.
+# Adaptive Chirplet Transform (ACT) – GPU Implementation
 
-## 📁 File Structure
+This repository provides a **GPU-accelerated implementation of the Adaptive Chirplet Transform (ACT)** for EEG analysis.  
+It leverages **NVIDIA CUDA (via [CuPy](https://cupy.dev))** to accelerate dictionary generation and iterative decomposition of EEG signals, with optional CPU/GPU monitoring utilities.
 
-- `act_gpu.py`: Main ACT class with GPU-accelerated dictionary generation and transform.
-- `monitoringclass.py`: Monitors CPU and GPU usage during execution.
-- `run_chirplet_transform.py`: Example script to apply the transform on EEG data.
-- `ACT/Bitbrain/sub-1/...`: Directory containing EEG `.edf` files for input.
-- `act_results_sub-1_optimized.csv`: Output file containing per-epoch transform results.
+The repository currently includes three core modules:
 
-## 🔧 Dependencies
+- **`act_gpu.py`** – Implements the Adaptive Chirplet Transform, including GPU-accelerated dictionary generation and signal decomposition.  
+- **`monitoringclass.py`** – Provides CPU/GPU usage monitoring (power, memory, utilization), logging results to CSV for later inspection.  
+- **`run_act_example.py`** – Example pipeline for loading EEG data, preprocessing, applying ACT, and exporting results.  
 
-Make sure you have the following installed:
+---
+## Features
 
-```bash
-pip install cupy mne numpy pandas scipy matplotlib tqdm joblib
-```
+- GPU-accelerated chirplet dictionary construction using CuPy  
+- Iterative ACT decomposition with parameter refinement via SciPy optimization  
+- EEG preprocessing supported through [MNE](https://mne.tools/)  
+- Optional CPU/GPU monitoring during runs  
+- Outputs results (parameters, coefficients, reconstruction errors) as CSV  
 
-Other requirements:
+---
 
-- **CUDA-compatible GPU**
-- **Python 3.8+**
-- NVIDIA driver and CUDA toolkit (>= 12.0)
+## Requirements
 
-## Usage
+- **Python** 3.9+  
+- **NVIDIA GPU** with CUDA support (tested with CUDA 12.x)  
+- Recommended: 8 GB+ VRAM for larger EEG datasets  
 
-### 1. Prepare EEG Data
+### Python Dependencies
+All required packages are listed in `requirements.txt`.  
+Install them with:
+~~~bash
+pip install -r requirements.txt
+~~~
 
-Ensure your `.edf` EEG file is located at:
+## Quick Start
 
-```
+This guide will help you set up and run the provided code examples quickly.
+
+---
+
+### 1. Clone the Repository
+
+~~~bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+~~~
+
+### 2.	Prepare EEG data
+Place .edf EEG files in the expected directory structure.
+Example path used in run_act_example.py:
+
+~~~
 ACT/Bitbrain/sub-1/eeg/sub-1_task-Sleep_acq-headband_eeg.edf
-```
+~~~
 
-You may modify the path in `run_chirplet_transform.py` if needed.
+### 3. Run the example script
 
-### 2. Run Transform
+~~~
+python run_act_example.py
+~~~
 
-```bash
-python run_chirplet_transform.py
-```
+### 	4.	Check outputs
+Result Logs:
+~~~
+act_results_sub-1_optimized.csv
+~~~
+Monitoring logs:
+~~~
+cpu_monitoring.csv
+gpu_monitoring.csv
+~~~
 
-This will:
-
-- Load EEG data and filter it
-- Run the chirplet transform on `HB_1` and `HB_2` channels
-- Save the chirplet parameters, coefficients, error, and residue to `act_results_sub-1_optimized.csv`
-
-### 3. Output Format
+## Output Format
 
 The output CSV contains:
 
 | Epoch | Params (tc, fc, logDt, c) | Coeffs | Error | Residue |
 |-------|----------------------------|--------|-------|---------|
 
-## Example: Chirplet Atom Generation
+## Repository Structure
+~~~
+├── act_gpu.py             # Chirplet dictionary & transform (GPU accelerated)
+├── monitoringclass.py     # CPU/GPU monitoring utilities
+├── run_act_example.py     # Example script for EEG processing
+├── requirements.txt       # Python dependencies
+├── README.md              # Project documentation
+└── LICENSE                # MIT license (recommended)
+~~~
 
-You can generate a single chirplet atom using:
-
-```python
-act = ACT(FS=256, length=1280)
-chirplet_atom = act.g(tc=640, fc=5, logDt=-2, c=0.5)
-```
-
-## Performance Monitoring
-
-CPU and GPU usage are tracked per epoch using the `MonitoringClass`.
-
----
-
-## License
-
-MIT License. See `LICENSE` file for details.
+## Citation
+If you use this code in your research, please cite the upcoming preprint (link will be added when available).
 
 ## Author
+Nishant Kumar
 
-Nishant Kumar  
-Contact: nishanika3@gmail.com
+## License
+This project is released under the MIT License.
 
----
 
-## Notes
-
-- This implementation uses **CuPy's Unified Memory** to support large-scale signal processing with minimal memory management overhead.
-- The transform uses `scipy.optimize.minimize` to refine chirplet parameters after dictionary matching.
-- Suitable for sparse signal decomposition and high-resolution time-frequency analysis.
-
----
