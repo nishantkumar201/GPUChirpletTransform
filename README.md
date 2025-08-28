@@ -1,7 +1,9 @@
 # Adaptive Chirplet Transform (ACT) – GPU Implementation
 
 This repository provides a **GPU-accelerated implementation of the Adaptive Chirplet Transform (ACT)** for EEG analysis.  
-It leverages **NVIDIA CUDA (via [CuPy](https://cupy.dev))** to accelerate dictionary generation and iterative decomposition of EEG signals, with optional CPU/GPU monitoring utilities.
+It leverages **NVIDIA CUDA (via [CuPy](https://cupy.dev))** to accelerate dictionary generation and iterative decomposition of EEG signals, with optional CPU/GPU monitoring utilities. 
+
+This implementation is based on the original CPU code by [amanb2000](https://github.com/amanb2000/Adaptive_Chirplet_Transform).
 
 The repository currently includes three core modules:
 
