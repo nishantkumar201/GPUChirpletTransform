@@ -89,10 +89,30 @@ The output CSV contains:
 ~~~
 
 ## Citation
-If you use this code in your research, please cite the upcoming preprint (link will be added when available).
+
+Preliminary results of this work appeared in the  
+*27th Annual Mersivity / Water-HCI Symposium Proceedings*  
+(pp. 55–56), Zenodo, 2025.  
+👉 [https://doi.org/10.5281/zenodo.16973160](https://doi.org/10.5281/zenodo.16973160)
+
+A full version with extended profiling and evaluation has been accepted at  
+the *International Conference on Sensing Technology (ICST) 2025*.
 
 ## Author
 Nishant Kumar
+
+### Zenodo Preliminary Results
+~~~ bibtex
+@inproceedings{Mersivity2025,
+  editor    = {Steve Mann and Michael Condry and Nishant Kumar},
+  title     = {27th Annual Mersivity / Water-HCI Symposium Proceedings},
+  pages     = {55--56},
+  year      = {2025},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.16973160},
+  url       = {https://doi.org/10.5281/zenodo.16973160}
+}
+~~~
 
 ## License
 This project is released under the MIT License.
