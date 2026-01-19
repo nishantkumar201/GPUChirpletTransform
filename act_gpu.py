@@ -26,7 +26,7 @@ class ACT:
         complex=False,
         force_regenerate=False,
         mute=False,
-        monitor = True
+        monitor = False
     ):
         self.FS = FS
         self.length = length
@@ -65,7 +65,18 @@ class ACT:
         t = cp.arange(self.length) / self.FS
         gaussian_window = cp.exp(-0.5 * ((t - tc) / (Dt)) ** 2)
         complex_exp = cp.exp(2j * cp.pi * (c * (t - tc) ** 2 + fc * (t - tc)))
-        return cp.real(gaussian_window * complex_exp).astype(cp.float32) if self.float32 else gaussian_window * complex_exp
+        atom = gaussian_window * complex_exp
+        if not self.complex:
+            atom = cp.real(atom)
+
+        norm = cp.linalg.norm(atom)
+        if norm > 0:
+            atom /= norm
+
+        if self.float32:
+            atom = atom.astype(cp.float32)
+
+        return atom
 
     def generate_chirplet_dictionary(self, debug=False):
         tc_vals = cp.arange(self.tc_info[0], self.tc_info[1], self.tc_info[2])
@@ -104,6 +115,7 @@ class ACT:
         return dict_mat, param_mat
 
     def search_dictionary(self, signal):
+        print(signal.shape, self.dict_mat.shape)
         projection_values = self.dict_mat.dot(signal)
         return cp.argmax(projection_values), cp.max(projection_values)
 
@@ -114,13 +126,12 @@ class ACT:
         residue = cp.copy(signal)
 
         for P in range(order):
-
             ind, val = self.search_dictionary(residue)
             params = self.param_mat[ind]
             res = optimize.minimize(self.minimize_this, params.get(), args=(residue.get()))
             new_params = cp.array(res.x)
             updated_base_chirplet = self.g(tc=new_params[0], fc=new_params[1], logDt=new_params[2], c=new_params[3])
-            updated_chirplet_coeff = updated_base_chirplet.dot(signal) / self.FS
+            updated_chirplet_coeff = updated_base_chirplet.dot(residue)
             new_chirp = updated_base_chirplet * updated_chirplet_coeff
             residue -= new_chirp
             approx += new_chirp
