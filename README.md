@@ -1,30 +1,37 @@
-# Adaptive Chirplet Transform (ACT) – GPU Implementation
+# Adaptive Chirplet Transform (ACT) – CPU & GPU Reference Implementations
 
 ## Overview
 
-This repository provides reference implementations of the Adaptive Chirplet Transform (ACT) for both CPU and GPU execution, with mathematically corrected normalization and expanded evaluation support.
+This repository provides CPU and GPU reference implementations of the Adaptive Chirplet Transform (ACT).
+
+It includes:
+- A CPU reference implementation (act.py) for correctness verification and reproducibility
+- A GPU-accelerated implementation (act_gpu.py) leveraging **NVIDIA CUDA (via [CuPy](https://cupy.dev))** to accelerate dictionary generation and iterative decomposition
+
+Both implementations include mathematically corrected normalization and expanded evaluation support, ensuring numerical consistency across backends.
 
 The codebase is intended for:
 - Reproducible ACT research
 - Performance comparison between CPU and GPU pipelines
 
-The GPU implementation has been previously validated and published in a conference setting. The CPU implementation has been updated to match the corrected mathematical formulation used in the GPU version.
-
-This repository provides a **GPU-accelerated implementation of the Adaptive Chirplet Transform (ACT)** for EEG analysis.  
-It leverages **NVIDIA CUDA (via [CuPy](https://cupy.dev))** to accelerate dictionary generation and iterative decomposition of EEG signals, with optional CPU/GPU monitoring utilities. 
+The GPU implementation has been previously validated and published in a conference setting. The CPU implementation has been updated to match the corrected mathematical formulation used in the GPU version. Optional CPU/GPU monitoring utilities are included to record power, memory, and utilization metrics.
 
 This implementation is based on the original CPU code by [amanb2000](https://github.com/amanb2000/Adaptive_Chirplet_Transform).
 
-The repository currently includes three core modules:
+---
+## Repository Structure
+The repository currently includes four core modules:
 
-- **`act_gpu.py`** – Implements the Adaptive Chirplet Transform, including GPU-accelerated dictionary generation and signal decomposition.  
+- **`act.py`**- Implements the mathematically correct Adaptive Chirplet Transform
+- **`act_gpu.py`** – Implements the Adaptive Chirplet Transform including GPU-accelerated dictionary generation and signal decomposition. 
 - **`monitoringclass.py`** – Provides CPU/GPU usage monitoring (power, memory, utilization), logging results to CSV for later inspection.  
 - **`run_act_example.py`** – Example pipeline for loading EEG data, preprocessing, applying ACT, and exporting results.  
 
 ---
 ## Features
 
-- GPU-accelerated chirplet dictionary construction using CuPy  
+- CPU reference implementation (act.py) for correctness verification and reproducibility
+- GPU-accelerated chirplet dictionary construction using CuPy (act_gpu.py)
 - Iterative ACT decomposition with parameter refinement via SciPy optimization  
 - EEG preprocessing supported through [MNE](https://mne.tools/)  
 - Optional CPU/GPU monitoring during runs  
@@ -35,8 +42,8 @@ The repository currently includes three core modules:
 ## Requirements
 
 - **Python** 3.9+  
-- **NVIDIA GPU** with CUDA support (tested with CUDA 12.x)  
-- Recommended: 8 GB+ VRAM for larger EEG datasets  
+- **NVIDIA GPU** with CUDA support (tested with CUDA 12.x) (if doing act_gpu.py)
+- Recommended: 8 GB+ VRAM for larger EEG datasets (if doing act_gpu.py)
 
 ### Python Dependencies
 All required packages are listed in `requirements.txt`.  
@@ -92,12 +99,13 @@ The output CSV contains:
 
 ## Repository Structure
 ~~~
-├── act_gpu.py             # Chirplet dictionary & transform (GPU accelerated)
+├── act.py                 # CPU reference implementation
+├── act_gpu.py             # GPU-accelerated ACT (CuPy / CUDA)
 ├── monitoringclass.py     # CPU/GPU monitoring utilities
-├── run_act_example.py     # Example script for EEG processing
+├── run_act_example.py     # Example EEG processing pipeline
 ├── requirements.txt       # Python dependencies
 ├── README.md              # Project documentation
-└── LICENSE                # MIT license (recommended)
+└── LICENSE                # MIT License
 ~~~
 
 ## Citation
@@ -109,6 +117,9 @@ Preliminary results of this work appeared in the
 
 A full version with extended profiling and evaluation has been accepted at  
 the *International Conference on Sensing Technology (ICST) 2025*.
+
+If you use this repository (CPU or GPU code), please additionally cite: 
+Nishant Kumar, Adaptive Chirplet Transform (ACT) – CPU/GPU Reference Implementation, GitHub repository, 2026.
 
 ## Author
 Nishant Kumar
